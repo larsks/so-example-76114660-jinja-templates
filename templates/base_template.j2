@@ -1,0 +1,28 @@
+{{ dag_id }}:
+  default_args:
+    owner: {{ owner }}
+    start_date: 2018-01-01  # or '2 days'
+    end_date: 2018-01-05
+    retries: 1
+    retry_delay_sec: 300
+  schedule_interval: {{ schedule_interval }}
+  concurrency: 1
+  max_active_runs: 1
+  dagrun_timeout_sec: 60
+  default_view: 'tree'  # or 'graph', 'duration', 'gantt', 'landing_times'
+  orientation: 'LR'  # or 'TB', 'RL', 'BT'
+  description: {{ description }}
+  task_groups:
+    {% if task_groups is defined %}
+      {% for task_groups, dependencies in task_groups.items() %}
+        {{ task_groups }}:
+          dependencies: {{ dependencies['dependencies'] }}
+      {% endfor %}
+    {% endif %}
+  tasks:
+    {% for tasks, operators in tasks.items() %}
+    {{ tasks }}:
+     operator: {{ operators['operator']}}
+      {% set task_template=operators['operator'] + '.j2' %}
+        {% include task_template %}
+    {% endfor %}

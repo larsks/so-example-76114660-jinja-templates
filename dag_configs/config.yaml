@@ -1,0 +1,9 @@
+dag_id: example
+task_id: example_task_id
+image_name: example_img
+env_vars: example_env_vars
+labels: example_labels
+dependencies: example_deps
+tasks:
+  task1:
+    operator: example_operator
